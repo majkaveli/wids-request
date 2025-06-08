@@ -1,0 +1,81 @@
+{
+  "info": {
+    "name": "WIDS Report API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "WISD_Report_Request",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Basic {{basic_auth_token}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS/WISD_Report_Request?project_ids={{project_ids}}&start={{start}}&end={{end}}&milestone={{milestone}}",
+          "protocol": "https",
+          "host": [
+            "elastic",
+            "snaplogic",
+            "com"
+          ],
+          "path": [
+            "api",
+            "1",
+            "rest",
+            "slsched",
+            "feed",
+            "SNAPDataIntegration",
+            "projects",
+            "report_WIDS",
+            "WISD_Report_Request"
+          ],
+          "query": [
+            {
+              "key": "project_ids",
+              "value": "{{project_ids}}"
+            },
+            {
+              "key": "start",
+              "value": "{{start}}"
+            },
+            {
+              "key": "end",
+              "value": "{{end}}"
+            },
+            {
+              "key": "milestone",
+              "value": "{{milestone}}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "project_ids",
+      "value": "'a2cRh00000ZjiK7IAJ','a2cRh00000erdPsIAI'"
+    },
+    {
+      "key": "start",
+      "value": "2024-01-01"
+    },
+    {
+      "key": "end",
+      "value": "2024-12-31"
+    },
+    {
+      "key": "milestone",
+      "value": ""
+    },
+    {
+      "key": "basic_auth_token",
+      "value": "base64encoded_username:password"
+    }
+  ]
+}
