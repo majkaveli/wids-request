@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WIDS Report Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    form {
+      max-width: 600px;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input {
+      width: 100%;
+      padding: 0.5em;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.7em 1.5em;
+    }
+    .response {
+      margin-top: 2em;
+      white-space: pre-wrap;
+      background: #f2f2f2;
+      padding: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>WIDS Report Request</h1>
+  <form id="reportForm">
+    <label>Start Date
+      <input type="date" name="start" required />
+    </label>
+    <label>End Date
+      <input type="date" name="end" required />
+    </label>
+    <label>Milestone
+      <input type="text" name="milestone" value="Audit Completed" required />
+    </label>
+    <label>Milestone Field
+      <input type="text" name="milestone_ac" value="Audit_Completed_Date__c" required />
+    </label>
+    <label>Bearer Token
+      <input type="text" id="bearerToken" placeholder="Paste your token here" required />
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="response" id="responseBox"></div>
+
+  <script>
+    document.getElementById("reportForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const params = new URLSearchParams(formData).toString();
+
+      const baseUrl = "https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility";
+      const url = `${baseUrl}/WISD_Report_Request?${params}`;
+
+      const bearerToken = document.getElementById("bearerToken").value;
+
+      try {
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${bearerToken}`
+          }
+        });
+
+        const text = await res.text();
+        document.getElementById("responseBox").innerText = text || `[${res.status}] Request completed with no content.`;
+      } catch (error) {
+        document.getElementById("responseBox").innerText = "Request failed:\n" + error;
+      }
+    });
+  </script>
+</body>
+</html>
