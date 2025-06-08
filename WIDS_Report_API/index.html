@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>WIDS Report Request</title>
+  <meta charset="UTF-8">
+  <title>Trigger WIDS Report</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,66 +23,24 @@
       margin-top: 1em;
       padding: 0.7em 1.5em;
     }
-    .response {
-      margin-top: 2em;
-      white-space: pre-wrap;
-      background: #f2f2f2;
-      padding: 1em;
-    }
   </style>
 </head>
 <body>
-  <h1>WIDS Report Request</h1>
-  <form id="reportForm">
+  <h1>Trigger WIDS Report</h1>
+  <form action="https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility/WISD_Report_Request" method="GET" target="_blank">
     <label>Start Date
-      <input type="date" name="start" required />
+      <input type="date" name="start" required>
     </label>
     <label>End Date
-      <input type="date" name="end" required />
+      <input type="date" name="end" required>
     </label>
     <label>Milestone
-      <input type="text" name="milestone" value="Audit Completed" required />
+      <input type="text" name="milestone" value="Audit Completed" required>
     </label>
     <label>Milestone Field
-      <input type="text" name="milestone_ac" value="Audit_Completed_Date__c" required />
+      <input type="text" name="milestone_ac" value="Audit_Completed_Date__c" required>
     </label>
-    <label>Bearer Token
-      <input type="text" id="bearerToken" placeholder="Paste your token here" required />
-    </label>
-    <button type="submit">Submit</button>
+    <button type="submit">Run Report</button>
   </form>
-
-  <div class="response" id="responseBox"></div>
-
-  <script>
-    document.getElementById("reportForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const params = new URLSearchParams();
-      params.append("start", e.target.start.value);
-      params.append("end", e.target.end.value);
-      params.append("milestone", e.target.milestone.value);
-      params.append("milestone_ac", e.target.milestone_ac.value);
-
-      const baseUrl = "https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility";
-      const url = `${baseUrl}/WISD_Report_Request?${params.toString()}`;
-
-      const bearerToken = document.getElementById("bearerToken").value;
-
-      try {
-        const res = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${bearerToken}`
-          }
-        });
-
-        const text = await res.text();
-        document.getElementById("responseBox").innerText = text || `[${res.status}] Request completed with no content.`;
-      } catch (error) {
-        document.getElementById("responseBox").innerText = "Request failed:\n" + error;
-      }
-    });
-  </script>
 </body>
 </html>
