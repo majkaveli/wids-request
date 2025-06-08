@@ -58,11 +58,14 @@
     document.getElementById("reportForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(e.target);
-      const params = new URLSearchParams(formData).toString();
+      const params = new URLSearchParams();
+      params.append("start", e.target.start.value);
+      params.append("end", e.target.end.value);
+      params.append("milestone", e.target.milestone.value);
+      params.append("milestone_ac", e.target.milestone_ac.value);
 
       const baseUrl = "https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility";
-      const url = `${baseUrl}/WISD_Report_Request?${params}`;
+      const url = `${baseUrl}/WISD_Report_Request?${params.toString()}`;
 
       const bearerToken = document.getElementById("bearerToken").value;
 
