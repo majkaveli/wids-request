@@ -24,7 +24,7 @@
       display: block;
       margin-top: 1em;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 0.6em;
       margin-top: 0.3em;
@@ -57,15 +57,21 @@
 <body>
   <form id="reportForm">
     <h1>Run WIDS Report</h1>
-    <label>Start Date
+    <label>Milestone
+      <select name="milestone" id="milestone">
+        <option>Audit Completed</option>
+        <option>Approved for Work</option>
+        <option>QCI Completed</option>
+        <option>Certified</option>
+      </select>
+    </label>
+    <label>Report Start Range
       <input type="date" name="start" required />
     </label>
-    <label>End Date
+    <label>Report End Range
       <input type="date" name="end" required />
     </label>
-    <label>Milestone
-      <input type="text" name="milestone" value="Audit Completed" required />
-    </label>
+    <input type="hidden" name="milestone_ac" id="milestone_ac" />
     <label>Bearer Token
       <input type="password" id="bearerToken" placeholder="Paste your SnapLogic Bearer token here" required />
     </label>
@@ -74,12 +80,31 @@
   </form>
 
   <script>
+    const milestoneMap = {
+      "Audit Completed": "Audit_Completed_Date__c",
+      "Approved for Work": "Approved_for_Work_Date__c",
+      "QCI Completed": "QCI_Completed_Date__c",
+      "Certified": "Certified_Date__c"
+    };
+
+    document.getElementById("milestone").addEventListener("change", function () {
+      const selected = this.value;
+      document.getElementById("milestone_ac").value = milestoneMap[selected] || "";
+    });
+
     document.getElementById("reportForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const startDate = e.target.start.value;
+      const endDate = e.target.end.value;
+      if (endDate < startDate) {
+        alert("End date cannot be before start date.");
+        return;
+      }
+
       const params = new URLSearchParams();
-      params.append("start", e.target.start.value);
-      params.append("end", e.target.end.value);
+      params.append("start", startDate);
+      params.append("end", endDate);
       params.append("milestone", e.target.milestone.value);
       params.append("milestone_ac", e.target.milestone_ac.value);
 
@@ -100,6 +125,9 @@
         document.getElementById("responseBox").innerText = "Request failed:\n" + error;
       }
     });
+
+    // Initialize milestone_ac on load
+    document.getElementById("milestone_ac").value = milestoneMap[document.getElementById("milestone").value];
   </script>
 </body>
 </html>
