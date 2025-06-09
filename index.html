@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,6 +58,7 @@
 <body>
   <form id="reportForm">
     <h1>Run WIDS Report</h1>
+
     <label>Milestone
       <select name="milestone" id="milestone">
         <option>Audit Completed</option>
@@ -65,16 +67,21 @@
         <option>Certified</option>
       </select>
     </label>
+
     <label>Report Start Range
       <input type="date" name="start" required />
     </label>
+
     <label>Report End Range
       <input type="date" name="end" required />
     </label>
+
     <input type="hidden" name="milestone_ac" id="milestone_ac" />
+
     <label>Bearer Token
       <input type="password" id="bearerToken" placeholder="Paste your SnapLogic Bearer token here" required />
     </label>
+
     <button type="submit">Trigger Report</button>
     <div class="response" id="responseBox"></div>
   </form>
@@ -87,13 +94,19 @@
       "Certified": "Certified_Date__c"
     };
 
-    document.getElementById("milestone").addEventListener("change", function () {
-      const selected = this.value;
+    function updateMilestoneAC() {
+      const selected = document.getElementById("milestone").value;
       document.getElementById("milestone_ac").value = milestoneMap[selected] || "";
-    });
+    }
+
+    // Populate milestone_ac on page load
+    window.onload = updateMilestoneAC;
+    document.getElementById("milestone").addEventListener("change", updateMilestoneAC);
 
     document.getElementById("reportForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      updateMilestoneAC();  // Ensure milestone_ac is updated before submit
 
       const startDate = e.target.start.value;
       const endDate = e.target.end.value;
@@ -106,7 +119,7 @@
       params.append("start", startDate);
       params.append("end", endDate);
       params.append("milestone", e.target.milestone.value);
-      params.append("milestone_ac", e.target.milestone_ac.value);
+      params.append("milestone_ac", document.getElementById("milestone_ac").value);
 
       const url = `https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility/WISD_Report_Request?${params.toString()}`;
       const bearerToken = document.getElementById("bearerToken").value;
@@ -125,9 +138,6 @@
         document.getElementById("responseBox").innerText = "Request failed:\n" + error;
       }
     });
-
-    // Initialize milestone_ac on load
-    document.getElementById("milestone_ac").value = milestoneMap[document.getElementById("milestone").value];
   </script>
 </body>
 </html>
