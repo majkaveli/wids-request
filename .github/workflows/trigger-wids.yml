@@ -1,0 +1,26 @@
+name: WIDS Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        description: "Start Date"
+        required: true
+      end:
+        description: "End Date"
+        required: true
+      milestone:
+        description: "Milestone"
+        required: true
+      milestone_ac:
+        description: "Milestone AC Field"
+        required: true
+
+jobs:
+  call-snaplogic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call SnapLogic
+        run: |
+          curl -X GET "https://elastic.snaplogic.com/api/1/rest/slsched/feed/SNAPDataIntegration/projects/report_WIDS_Utility/WISD_Report_Request?start=${{ github.event.inputs.start }}&end=${{ github.event.inputs.end }}&milestone=${{ github.event.inputs.milestone }}&milestone_ac=${{ github.event.inputs.milestone_ac }}" \
+            -H "Authorization: Bearer ${{ secrets.WIDS_SNAP_TOKEN }}"
